@@ -27,7 +27,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run a one-line script
         run: |
-          docker build -t https://github.com/metacall/distributable.git#master
+          docker build https://github.com/metacall/distributable.git#master
           docker run --privileged --name tmp metacall/distributable sh -c 'guix pull'
           docker commit tmp metacall/distributable && docker rm -f tmp
           docker run -d --privileged --name tmp metacall/distributable /metacall/scripts/deps.sh
