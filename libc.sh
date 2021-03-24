@@ -13,6 +13,7 @@ export LC_ALL=POSIX
 export PATH="${METACALL_PATH}/bin:/bin:/usr/bin:/sbin:/usr/sbin"
 
 mkdir -p "${METACALL_PATH}/libc"
+pwd
 
 curl https://ftp.gnu.org/gnu/glibc/glibc-${METACALL_GLIBC_VERSION}.tar.bz2 --output glibc.tar.bz2
 curl https://ftp.gnu.org/gnu/glibc/glibc-${METACALL_GLIBC_VERSION}.tar.bz2.sig --output glibc.tar.bz2.sig
@@ -20,6 +21,7 @@ gpg --verify glibc.tar.bz2.sig glibc.tar.bz2
 tar -xjf glibc.tar.bz2
 mkdir -p "glibc-${METACALL_GLIBC_VERSION}/build"
 cd "glibc-${METACALL_GLIBC_VERSION}/build"
+pwd
 ../configure
 		--prefix="${METACALL_PATH}/libc" \
 		--host=${METACALL_ARCH_HOST} \
