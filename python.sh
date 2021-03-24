@@ -22,19 +22,19 @@ export METACALL_LIBEXPAT_VERSION="2.2.9"
 export METACALL_PYTHON_VERSION="3.6.7"
 export METACALL_PATH=$METACALL_PATH
 
-CFLAGS=" -I${METACALL_PATH}/python/include"
+CFLAGS=" -I"${METACALL_PATH}"/python/include"
 
 LDFLAGS=" \
 	-fPIC \
-	-L${METACALL_PATH}/libc/lib \
-	-L${METACALL_PATH}/python/lib \
-	-Wl,-rpath=${METACALL_PATH}/libc/lib \
-	-Wl,-rpath=${METACALL_PATH}/python/lib \
-	-Wl,--dynamic-linker=${METACALL_PATH}/libc/lib/ld.so"
+	-L"${METACALL_PATH}"/libc/lib \
+	-L"${METACALL_PATH}"/python/lib \
+	-Wl,-rpath="${METACALL_PATH}"/libc/lib \
+	-Wl,-rpath="${METACALL_PATH}"/python/lib \
+	-Wl,--dynamic-linker="${METACALL_PATH}"/libc/lib/ld.so"
 
 
 # Create output path
-mkdir -p ${METACALL_PATH}/python
+mkdir -p "${METACALL_PATH}"/python
 
 # # Install zlib
 # FROM builder AS builder_zlib
@@ -44,7 +44,7 @@ mkdir -p ${METACALL_PATH}/python
 git clone -j8 --single-branch --branch v${METACALL_ZLIB_VERSION} https://github.com/madler/zlib.git zlib \
 	&& cd zlib \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 	&& make -j $(nproc) \
 	&& make install \
 	&& cd .. \
@@ -61,7 +61,7 @@ git clone -j8 --single-branch --branch v${METACALL_LIBFFI_VERSION} https://githu
 	&& sed -e '/^includesdir/ s/$(libdir).*$/$(includedir)/' -i include/Makefile.in \
 	&& sed -e '/^includedir/ s/=.*$/=@includedir@/' -e 's/^Cflags: -I${includedir}/Cflags:/' -i libffi.pc.in \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--disable-static \
 		--disable-docs \
 	&& make -j $(nproc) \
@@ -72,17 +72,17 @@ git clone -j8 --single-branch --branch v${METACALL_LIBFFI_VERSION} https://githu
 # # Install libssl
 # FROM builder AS builder_libssl
 
-# COPY --from=builder_zlib ${METACALL_PATH}/python ${METACALL_PATH}/python
+# COPY --from=builder_zlib "${METACALL_PATH}"/python "${METACALL_PATH}"/python
 
 # ARG METACALL_LIBSSL_VERSION
 
 git clone -j8 --recursive --single-branch --branch ${METACALL_LIBSSL_VERSION} https://github.com/openssl/openssl.git libssl \
 	&& cd libssl \
 	&& ./config \
-		--prefix=${METACALL_PATH}/python \
-		--openssldir=${METACALL_PATH}/python \
-		--with-zlib-include=${METACALL_PATH}/python/include \
-		--with-zlib-lib=${METACALL_PATH}/python/lib \
+		--prefix="${METACALL_PATH}"/python \
+		--openssldir="${METACALL_PATH}"/python \
+		--with-zlib-include="${METACALL_PATH}"/python/include \
+		--with-zlib-lib="${METACALL_PATH}"/python/lib \
 		shared \
 		no-tests \
 		zlib \
@@ -103,12 +103,12 @@ git clone -j8 --single-branch --branch bzip2-${METACALL_LIBBZ2_VERESION} https:/
 	&& sed -i 's@-shared@-shared \$\(LDFLAGS\)@' Makefile-libbz2_so \
 	&& sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile \
 	&& make -j $(nproc) -f Makefile-libbz2_so \
-	&& mkdir -p ${METACALL_PATH}/python/lib \
-	&& cp libbz2.so.${METACALL_LIBBZ2_VERESION} ${METACALL_PATH}/python/lib/libbz2.so.${METACALL_LIBBZ2_VERESION} \
-	&& ln -rs ${METACALL_PATH}/python/lib/libbz2.so.${METACALL_LIBBZ2_VERESION} ${METACALL_PATH}/python/lib/libbz2.so \
+	&& mkdir -p "${METACALL_PATH}"/python/lib \
+	&& cp libbz2.so.${METACALL_LIBBZ2_VERESION} "${METACALL_PATH}"/python/lib/libbz2.so.${METACALL_LIBBZ2_VERESION} \
+	&& ln -rs "${METACALL_PATH}"/python/lib/libbz2.so.${METACALL_LIBBZ2_VERESION} "${METACALL_PATH}"/python/lib/libbz2.so \
 	&& make clean \
 	&& make -j $(nproc) \
-	&& make install PREFIX=${METACALL_PATH}/python \
+	&& make install PREFIX="${METACALL_PATH}"/python \
 	&& cd .. \
 	&& rm -rf bzip2
 
@@ -124,7 +124,7 @@ curl https://ftp.gnu.org/gnu/ncurses/ncurses-${METACALL_LIBNCURSES_VERSION}.tar.
 	&& cd ncurses-${METACALL_LIBNCURSES_VERSION} \
 	&& sed -i '/LIBTOOL_INSTALL/d' c++/Makefile.in \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--with-shared \
 		--without-debug \
 		--without-normal \
@@ -148,7 +148,7 @@ curl https://ftp.gnu.org/gnu/gdbm/gdbm-${METACALL_LIBGDBM_VERSION}.tar.gz --outp
 	&& tar -xzf gdbm.tar.gz \
 	&& cd gdbm-${METACALL_LIBGDBM_VERSION} \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--disable-static \
 		--enable-libgdbm-compat \
 	&& make -j $(nproc) \
@@ -165,7 +165,7 @@ git clone -j8 --single-branch --branch v${METACALL_LIBLZMA_VERSION} https://git.
 	&& cd xz \
 	&& ./autogen.sh \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--disable-xz \
 		--disable-xzdec \
 		--disable-lzmadec \
@@ -190,7 +190,7 @@ export METACALL_LIBSQLITE3_VERSION_HEX=$(printf '%s' ${METACALL_LIBSQLITE3_VERSI
 	&& tar -xzf sqlite3.tar.gz \
 	&& cd sqlite-autoconf-${METACALL_LIBSQLITE3_VERSION_HEX} \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--disable-static \
 		--enable-fts5 \
 		CFLAGS="-O2 \
@@ -209,7 +209,7 @@ export METACALL_LIBSQLITE3_VERSION_HEX=$(printf '%s' ${METACALL_LIBSQLITE3_VERSI
 # Install libtcl
 # FROM builder AS builder_libtcl
 
-# COPY --from=builder_zlib ${METACALL_PATH}/python ${METACALL_PATH}/python
+# COPY --from=builder_zlib "${METACALL_PATH}"/python "${METACALL_PATH}"/python
 
 # ARG METACALL_LIBTCL_VERSION
 
@@ -217,26 +217,26 @@ export METACALL_LIBTCL_VERSION_BRANCH=$(printf '%s' "${METACALL_LIBTCL_VERSION}"
 	&& git clone -j8 --single-branch --branch core-${METACALL_LIBTCL_VERSION_BRANCH} https://github.com/tcltk/tcl.git tcl \
 	&& cd tcl/unix \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
-		--exec-prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
+		--exec-prefix="${METACALL_PATH}"/python \
 		--enable-shared \
 		--enable-threads \
 	&& make -j $(nproc) \
 	&& sed -i \
-		-e "s@^\(TCL_SRC_DIR='\).*@\1${METACALL_PATH}/python/include'@" \
-		-e "/TCL_B/s@='\(-L\)\?.*unix@='\1${METACALL_PATH}/python/lib@" \
+		-e "s@^\(TCL_SRC_DIR='\).*@\1"${METACALL_PATH}"/python/include'@" \
+		-e "/TCL_B/s@='\(-L\)\?.*unix@='\1"${METACALL_PATH}"/python/lib@" \
 		-e "/SEARCH/s/=.*/=''/" \
 		tclConfig.sh \
 	&& make install \
 	&& make install-private-headers \
-	&& ln -rs ${METACALL_PATH}/python/bin/tclsh ${METACALL_PATH}/python/bin/$(expr substr "${METACALL_LIBTCL_VERSION}" 1 3) \
+	&& ln -rs "${METACALL_PATH}"/python/bin/tclsh "${METACALL_PATH}"/python/bin/$(expr substr "${METACALL_LIBTCL_VERSION}" 1 3) \
 	&& cd ../.. \
 	&& rm -rf tcl
 
 # # Install libtk
 # FROM builder AS builder_libtk
 
-# COPY --from=builder_libtcl ${METACALL_PATH}/python ${METACALL_PATH}/python
+# COPY --from=builder_libtcl "${METACALL_PATH}"/python "${METACALL_PATH}"/python
 
 # ARG METACALL_LIBTK_VERSION
 
@@ -247,13 +247,13 @@ export METACALL_LIBTCL_VERSION_BRANCH=$(printf '%s' "${METACALL_LIBTCL_VERSION}"
 
 # ARG METACALL_UTIL_LINUX_VERSION
 
-export CFLAGS="-I${METACALL_PATH}/libc/include" \
+export CFLAGS="-I"${METACALL_PATH}"/libc/include" \
 	&& git clone -j8 --single-branch --branch v${METACALL_UTIL_LINUX_VERSION} https://github.com/karelzak/util-linux.git util-linux \
 	&& cd util-linux \
 	&& mkdir -p /var/lib/hwclock \
 	&& ./autogen.sh \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--disable-all-programs \
 		--disable-static \
 		--enable-libuuid \
@@ -265,7 +265,7 @@ export CFLAGS="-I${METACALL_PATH}/libc/include" \
 # # Install libreadline
 # FROM builder AS builder_libreadline
 
-# COPY --from=builder_libncurses ${METACALL_PATH}/python ${METACALL_PATH}/python
+# COPY --from=builder_libncurses "${METACALL_PATH}"/python "${METACALL_PATH}"/python
 
 # ARG METACALL_LIBREADLINE_VERSION
 
@@ -277,13 +277,13 @@ curl https://ftp.gnu.org/gnu/readline/readline-${METACALL_LIBREADLINE_VERSION}.t
 	&& sed -i '/MV.*old/d' Makefile.in \
 	&& sed -i '/{OLDSUFF}/c:' support/shlib-install \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--disable-static \
 		--enable-shared \
 		--enable-multibyte \
 		--with-curses \
-	&& make SHLIB_LIBS="-L${METACALL_PATH}/python/lib -lncursesw" -j $(nproc) \
-	&& make SHLIB_LIBS="-L${METACALL_PATH}/python/lib -lncursesw" install \
+	&& make SHLIB_LIBS="-L"${METACALL_PATH}"/python/lib -lncursesw" -j $(nproc) \
+	&& make SHLIB_LIBS="-L"${METACALL_PATH}"/python/lib -lncursesw" install \
 	&& cd .. \
 	&& rm -rf readline-${METACALL_LIBREADLINE_VERSION}
 
@@ -302,7 +302,7 @@ apt-get update \
 	&& cp configfsf.guess config.guess \
 	&& cp configfsf.sub config.sub \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--disable-static \
 		--enable-shared \
 		--disable-cxx \
@@ -314,7 +314,7 @@ apt-get update \
 # # Install libmpfr
 # FROM builder AS builder_libmpfr
 
-# COPY --from=builder_libgmp ${METACALL_PATH}/python ${METACALL_PATH}/python
+# COPY --from=builder_libgmp "${METACALL_PATH}"/python "${METACALL_PATH}"/python
 
 # ARG METACALL_LIBMPFR_VERSION
 
@@ -329,7 +329,7 @@ curl https://www.mpfr.org/mpfr-current/mpfr-${METACALL_LIBMPFR_VERSION}.tar.gz -
 	&& tar -xzf mpfr.tar.gz \
 	&& cd mpfr-${METACALL_LIBMPFR_VERSION} \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--disable-static \
 		--enable-thread-safe \
 	&& make -j $(nproc) \
@@ -340,7 +340,7 @@ curl https://www.mpfr.org/mpfr-current/mpfr-${METACALL_LIBMPFR_VERSION}.tar.gz -
 # # Install libmpc
 # FROM builder AS builder_libmpc
 
-# COPY --from=builder_libmpfr ${METACALL_PATH}/python ${METACALL_PATH}/python
+# COPY --from=builder_libmpfr "${METACALL_PATH}"/python "${METACALL_PATH}"/python
 
 # ARG METACALL_LIBMPC_VERSION
 
@@ -350,7 +350,7 @@ curl https://ftp.gnu.org/gnu/mpc/mpc-${METACALL_LIBMPC_VERSION}.tar.gz --output 
 	&& tar -xzf mpc.tar.gz \
 	&& cd mpc-${METACALL_LIBMPC_VERSION} \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--disable-static \
 	&& make -j $(nproc) \
 	&& make install \
@@ -360,8 +360,8 @@ curl https://ftp.gnu.org/gnu/mpc/mpc-${METACALL_LIBMPC_VERSION}.tar.gz --output 
 # # Install libgcc
 # FROM builder AS builder_libgcc
 
-# COPY --from=builder_zlib ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libmpc ${METACALL_PATH}/python ${METACALL_PATH}/python
+# COPY --from=builder_zlib "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libmpc "${METACALL_PATH}"/python "${METACALL_PATH}"/python
 
 # ARG METACALL_LIBGCC_VERSION
 
@@ -379,12 +379,12 @@ curl https://ftp.gnu.org/gnu/gcc/gcc-${METACALL_LIBGCC_VERSION}/gcc-${METACALL_L
 	&& cd build \
 	&& export SED=sed \
 	&& ../configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--enable-languages=c,c++ \
 		--disable-multilib \
 		--disable-bootstrap \
-		--with-gmp=${METACALL_PATH}/python \
-		--with-mpfr=${METACALL_PATH}/python \
+		--with-gmp="${METACALL_PATH}"/python \
+		--with-mpfr="${METACALL_PATH}"/python \
 		--with-system-zlib \
 	&& make -j $(nproc) all-target-libgcc \
 	&& make install-target-libgcc \
@@ -392,14 +392,14 @@ curl https://ftp.gnu.org/gnu/gcc/gcc-${METACALL_LIBGCC_VERSION}/gcc-${METACALL_L
 	&& rm -rf gcc.tar.gz gcc.tar.gz.sig gcc-${METACALL_LIBGCC_VERSION}
 
 # TODO: Review rpath and ldpath are not set correctly in output library libgcc_s.so.1
-#	They point to the system libc and ld instead of our own versions in ${METACALL_PATH}/python/lib
-ls -la ${METACALL_PATH}/python/lib/libgcc_s.so.1 \
-	&& ldd ${METACALL_PATH}/python/lib/libgcc_s.so.1
+#	They point to the system libc and ld instead of our own versions in "${METACALL_PATH}"/python/lib
+ls -la "${METACALL_PATH}"/python/lib/libgcc_s.so.1 \
+	&& ldd "${METACALL_PATH}"/python/lib/libgcc_s.so.1
 
 # # Install libmpdec
 # FROM builder AS builder_libmpdec
 
-# COPY --from=builder_libgcc ${METACALL_PATH}/python ${METACALL_PATH}/python
+# COPY --from=builder_libgcc "${METACALL_PATH}"/python "${METACALL_PATH}"/python
 
 # ARG METACALL_LIBMPDEC_VERSION
 
@@ -408,7 +408,7 @@ curl https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-${METACALL_L
 	&& tar -xzf mpdecimal.tar.gz \
 	&& cd mpdecimal-${METACALL_LIBMPDEC_VERSION} \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 	&& make -j $(nproc) \
 	&& make install \
 	&& cd .. \
@@ -424,30 +424,30 @@ export METACALL_LIBEXPAT_VERSION_BRANCH=$(printf '%s' "${METACALL_LIBEXPAT_VERSI
 	&& cd libexpat/expat \
 	&& ./buildconf.sh \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--disable-static \
 	&& make -j$(nproc) \
 	&& make install \
 	&& cd ../.. \
 	&& rm -rf libexpat
 
-FROM builder AS builder_python
+# FROM builder AS builder_python
 
 # # Copy all dependencies
-# COPY --from=builder_zlib ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libffi ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libssl ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libbz2 ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libncurses ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libgdbm ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_liblzma ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libsqlite3 ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libtk ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libuuid ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libreadline ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libgcc ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libmpdec ${METACALL_PATH}/python ${METACALL_PATH}/python
-# COPY --from=builder_libexpat ${METACALL_PATH}/python ${METACALL_PATH}/python
+# COPY --from=builder_zlib "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libffi "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libssl "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libbz2 "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libncurses "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libgdbm "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_liblzma "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libsqlite3 "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libtk "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libuuid "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libreadline "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libgcc "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libmpdec "${METACALL_PATH}"/python "${METACALL_PATH}"/python
+# COPY --from=builder_libexpat "${METACALL_PATH}"/python "${METACALL_PATH}"/python
 
 # # Build CPython
 # # TODO: Add --enable-optimizations
@@ -457,11 +457,12 @@ FROM builder AS builder_python
 git clone -j8 --single-branch --branch v${METACALL_PYTHON_VERSION} https://github.com/python/cpython.git \
 	&& cd cpython \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/python \
+		--prefix="${METACALL_PATH}"/python \
 		--with-lto \
 		--enable-shared \
+		--host \
 		CFLAGS="${CFLAGS} \
-			-I${METACALL_PATH}/python/include/ncursesw \
+			-I"${METACALL_PATH}"/python/include/ncursesw \
 			-DHAVE_MEMMOVE=1 \
 			-D_FORTIFY_SOURCE=2 -O3 -fstack-protector-strong -Wformat -Werror=format-security" \
 		LDFLAGS="-Wl,-z,relro ${LDFLAGS} -lm -lexpat" \
@@ -482,4 +483,4 @@ git clone -j8 --single-branch --branch v${METACALL_PYTHON_VERSION} https://githu
 
 # ARG METACALL_PATH
 
-# COPY --from=builder_python ${METACALL_PATH}/python ${METACALL_PATH}/python
+# COPY --from=builder_python "${METACALL_PATH}"/python "${METACALL_PATH}"/python

@@ -10,11 +10,6 @@ on:
   pull_request:
     branches: [ main ]
 
-env:
-  METACALL_ARCH: amd64
-  METACALL_ARCH_HOST: x86_64-linux-gnu
-  METACALL_PATH: $METACALL_PATH
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -25,7 +20,14 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: install
-        run: sudo apt install tree
+        run: |
+          sudo apt install tree
+          export METACALL_ARCH="amd64"
+          export METACALL_ARCH_HOST="x86_64-linux-gnu"
+          export METACALL_PATH="metacall"
+          export LANG=en_US.utf8
+          export DEBIAN_FRONTEND=noninteractive
+          export nproc="8"
 
       - uses: actions/checkout@v2
       - name: Run base
