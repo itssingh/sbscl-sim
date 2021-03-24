@@ -26,6 +26,8 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: install
         run: sudo apt install tree
+
+      - uses: actions/checkout@v2
       - name: Run base
         run: |
           bash base.sh

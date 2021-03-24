@@ -2,7 +2,7 @@
 
 METACALL_ARCH="amd64"
 METACALL_ARCH_HOST="x86_64-linux-gnu"
-METACALL_PATH="${METACALL_PATH}"
+METACALL_PATH="."
 
 sudo apt-get update 
 sudo apt-get install -y --no-install-recommends \
