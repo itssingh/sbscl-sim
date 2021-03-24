@@ -31,22 +31,28 @@ jobs:
       - name: Run base
         run: |
           bash base.sh
-          tree .
+          tree -a -I '.git'
 
 
       - name: Run libc
         run: |
           bash libc.sh
-          tree .
+          tree -a -I '.git'
 
       - name: Run Python
         run: |
           bash python.sh
+          tree -a -I '.git'
+
+      - name: Run ruby
+        run: |
+          bash ruby.sh
+          tree -a -I '.git'
 
       - name: Run core
         run: | 
           chalega.sh
-          tree .
+          tree -a -I '.git'
 
           
 

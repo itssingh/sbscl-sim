@@ -4,10 +4,10 @@ METACALL_ARCH="amd64"
 METACALL_PATH="${METACALL_PATH}"
 METACALL_GLIBC_VERSION="2.30"
 
-apt-get update
-apt-get install -y --no-install-recommends python3 python3-pip
-rm -rf /var/lib/apt/lists/*
-pip3 install pexpect
+sudo apt-get update
+sudo apt-get install -y --no-install-recommends python3 python3-pip
+sudo rm -rf /var/lib/apt/lists/*
+sudo pip3 install pexpect
 
 export LC_ALL=POSIX
 export PATH=${METACALL_PATH}/bin:/bin:/usr/bin:/sbin:/usr/sbin
@@ -18,8 +18,8 @@ curl https://ftp.gnu.org/gnu/glibc/glibc-${METACALL_GLIBC_VERSION}.tar.bz2 --out
 curl https://ftp.gnu.org/gnu/glibc/glibc-${METACALL_GLIBC_VERSION}.tar.bz2.sig --output glibc.tar.bz2.sig
 gpg --verify glibc.tar.bz2.sig glibc.tar.bz2
 tar -xjf glibc.tar.bz2
-mkdir -p glibc-${METACALL_GLIBC_VERSION}/build
-cd glibc-${METACALL_GLIBC_VERSION}/build
+mkdir -p "glibc-${METACALL_GLIBC_VERSION}/build"
+cd "glibc-${METACALL_GLIBC_VERSION}/build"
 ../configure
 		--prefix=${METACALL_PATH}/libc \
 		--host=${METACALL_ARCH_HOST} \
@@ -30,9 +30,9 @@ cd glibc-${METACALL_GLIBC_VERSION}/build
 make -j $(nproc)
 make install
 cd ../..
-rm -rf glibc-${METACALL_GLIBC_VERSION} glibc.tar.bz2 glibc.tar.bz2.sig
+sudo rm -rf glibc-${METACALL_GLIBC_VERSION} glibc.tar.bz2 glibc.tar.bz2.sig
 
-ln -s ${METACALL_PATH}/libc/lib/ld-${METACALL_GLIBC_VERSION}.so ${METACALL_PATH}/libc/lib/ld.so
+sudo ln -s ${METACALL_PATH}/libc/lib/ld-${METACALL_GLIBC_VERSION}.so ${METACALL_PATH}/libc/lib/ld.so
 
 echo 'int main(){}' > main.c
 gcc main.c \
