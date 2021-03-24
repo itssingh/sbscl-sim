@@ -27,7 +27,7 @@ cd "glibc-${METACALL_GLIBC_VERSION}/build"
 		libc_cv_forced_unwind=yes \
 		libc_cv_c_cleanup=yes \
 make -j $(nproc)
-make install
+sudo make install
 cd ../..
 sudo rm -rf glibc-${METACALL_GLIBC_VERSION} glibc.tar.bz2 glibc.tar.bz2.sig
 

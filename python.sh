@@ -20,7 +20,7 @@ export METACALL_LIBGCC_VERSION="6.3.0"
 export METACALL_LIBMPDEC_VERSION="2.4.2"
 export METACALL_LIBEXPAT_VERSION="2.2.9"
 export METACALL_PYTHON_VERSION="3.6.7"
-export METACALL_PATH=$METACALL_PATH
+export METACALL_PATH="metacall"
 
 CFLAGS=" -I"${METACALL_PATH}"/python/include"
 
@@ -46,7 +46,7 @@ git clone -j8 --single-branch --branch v${METACALL_ZLIB_VERSION} https://github.
 	&& ./configure \
 		--prefix="${METACALL_PATH}"/python \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf zlib
 
@@ -65,7 +65,7 @@ git clone -j8 --single-branch --branch v${METACALL_LIBFFI_VERSION} https://githu
 		--disable-static \
 		--disable-docs \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf libffi
 
@@ -87,8 +87,8 @@ git clone -j8 --recursive --single-branch --branch ${METACALL_LIBSSL_VERSION} ht
 		no-tests \
 		zlib \
 		zlib-dynamic \
-	&& make -j $(nproc) \
-	&& make install_sw \
+	&& make -j$(nproc) \
+	&& sudo make install_sw \
 	&& cd .. \
 	&& rm -rf libssl
 
@@ -107,8 +107,8 @@ git clone -j8 --single-branch --branch bzip2-${METACALL_LIBBZ2_VERESION} https:/
 	&& cp libbz2.so.${METACALL_LIBBZ2_VERESION} "${METACALL_PATH}"/python/lib/libbz2.so.${METACALL_LIBBZ2_VERESION} \
 	&& ln -rs "${METACALL_PATH}"/python/lib/libbz2.so.${METACALL_LIBBZ2_VERESION} "${METACALL_PATH}"/python/lib/libbz2.so \
 	&& make clean \
-	&& make -j $(nproc) \
-	&& make install PREFIX="${METACALL_PATH}"/python \
+	&& make -j$(nproc) \
+	&& sudo make install PREFIX="${METACALL_PATH}"/python \
 	&& cd .. \
 	&& rm -rf bzip2
 
@@ -133,7 +133,7 @@ curl https://ftp.gnu.org/gnu/ncurses/ncurses-${METACALL_LIBNCURSES_VERSION}.tar.
 		--enable-widec \
 		--enable-pc-files \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf ncurses.tar.gz ncurses.tar.gz.sig ncurses-${METACALL_LIBNCURSES_VERSION}
 
@@ -152,7 +152,7 @@ curl https://ftp.gnu.org/gnu/gdbm/gdbm-${METACALL_LIBGDBM_VERSION}.tar.gz --outp
 		--disable-static \
 		--enable-libgdbm-compat \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf gdbm.tar.gz.sig gdbm.tar.gz gdbm-${METACALL_LIBGDBM_VERSION}
 
@@ -173,7 +173,7 @@ git clone -j8 --single-branch --branch v${METACALL_LIBLZMA_VERSION} https://git.
 		--disable-scripts \
 		--disable-doc \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf xz
 
@@ -202,7 +202,7 @@ export METACALL_LIBSQLITE3_VERSION_HEX=$(printf '%s' ${METACALL_LIBSQLITE3_VERSI
 		-DSQLITE_SECURE_DELETE=1 \
 		-DSQLITE_ENABLE_FTS3_TOKENIZER=1" \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf sqlite3.tar.gz sqlite3.sha1 sqlite-autoconf-${METACALL_LIBSQLITE3_VERSION_HEX}
 
@@ -227,8 +227,8 @@ export METACALL_LIBTCL_VERSION_BRANCH=$(printf '%s' "${METACALL_LIBTCL_VERSION}"
 		-e "/TCL_B/s@='\(-L\)\?.*unix@='\1"${METACALL_PATH}"/python/lib@" \
 		-e "/SEARCH/s/=.*/=''/" \
 		tclConfig.sh \
-	&& make install \
-	&& make install-private-headers \
+	&& sudo make install \
+	&& sudo make install-private-headers \
 	&& ln -rs "${METACALL_PATH}"/python/bin/tclsh "${METACALL_PATH}"/python/bin/$(expr substr "${METACALL_LIBTCL_VERSION}" 1 3) \
 	&& cd ../.. \
 	&& rm -rf tcl
@@ -258,7 +258,7 @@ export CFLAGS="-I"${METACALL_PATH}"/libc/include" \
 		--disable-static \
 		--enable-libuuid \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf util-linux
 
@@ -307,7 +307,7 @@ apt-get update \
 		--enable-shared \
 		--disable-cxx \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf gmp-${METACALL_LIBGMP_VERSION}
 
@@ -333,7 +333,7 @@ curl https://www.mpfr.org/mpfr-current/mpfr-${METACALL_LIBMPFR_VERSION}.tar.gz -
 		--disable-static \
 		--enable-thread-safe \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf mpfr-${METACALL_LIBMPFR_VERSION}
 
@@ -353,7 +353,7 @@ curl https://ftp.gnu.org/gnu/mpc/mpc-${METACALL_LIBMPC_VERSION}.tar.gz --output 
 		--prefix="${METACALL_PATH}"/python \
 		--disable-static \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf mpc-${METACALL_LIBMPC_VERSION}
 
@@ -387,7 +387,7 @@ curl https://ftp.gnu.org/gnu/gcc/gcc-${METACALL_LIBGCC_VERSION}/gcc-${METACALL_L
 		--with-mpfr="${METACALL_PATH}"/python \
 		--with-system-zlib \
 	&& make -j $(nproc) all-target-libgcc \
-	&& make install-target-libgcc \
+	&& sudo make install-target-libgcc \
 	&& cd .. \
 	&& rm -rf gcc.tar.gz gcc.tar.gz.sig gcc-${METACALL_LIBGCC_VERSION}
 
@@ -410,7 +410,7 @@ curl https://www.bytereef.org/software/mpdecimal/releases/mpdecimal-${METACALL_L
 	&& ./configure \
 		--prefix="${METACALL_PATH}"/python \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf mpdecimal.tar.gz mpdecimal-${METACALL_LIBMPDEC_VERSION}
 
@@ -427,7 +427,7 @@ export METACALL_LIBEXPAT_VERSION_BRANCH=$(printf '%s' "${METACALL_LIBEXPAT_VERSI
 		--prefix="${METACALL_PATH}"/python \
 		--disable-static \
 	&& make -j$(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd ../.. \
 	&& rm -rf libexpat
 
@@ -467,7 +467,7 @@ git clone -j8 --single-branch --branch v${METACALL_PYTHON_VERSION} https://githu
 			-D_FORTIFY_SOURCE=2 -O3 -fstack-protector-strong -Wformat -Werror=format-security" \
 		LDFLAGS="-Wl,-z,relro ${LDFLAGS} -lm -lexpat" \
 	&& make -j$(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf cpython
 

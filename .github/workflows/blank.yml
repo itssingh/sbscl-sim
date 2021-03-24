@@ -41,15 +41,16 @@ jobs:
           bash libc.sh
           tree -a -I '.git'
 
+      - name: Run ruby
+        run: |
+          bash ruby.sh
+          tree -a -I '.git'
+      
       - name: Run Python
         run: |
           bash python.sh
           tree -a -I '.git'
 
-      - name: Run ruby
-        run: |
-          bash ruby.sh
-          tree -a -I '.git'
 
       - name: Run core
         run: | 

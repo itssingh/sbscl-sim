@@ -53,7 +53,7 @@ git clone -j8 --single-branch --branch v${METACALL_ZLIB_VERSION} https://github.
 	&& ./configure \
 		--prefix=${METACALL_PATH}/ruby \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf zlib
 
@@ -72,7 +72,7 @@ git clone -j8 --single-branch --branch v${METACALL_LIBFFI_VERSION} https://githu
 		--disable-static \
 		--disable-docs \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf libffi
 
@@ -95,7 +95,7 @@ git clone -j8 --recursive --single-branch --branch ${METACALL_LIBSSL_VERSION} ht
 		zlib \
 		zlib-dynamic \
 	&& make -j $(nproc) \
-	&& make install_sw \
+	&& sudo make install_sw \
 	&& cd .. \
 	&& rm -rf libssl
 
@@ -120,7 +120,7 @@ curl https://ftp.gnu.org/gnu/ncurses/ncurses-${METACALL_LIBNCURSES_VERSION}.tar.
 		--enable-widec \
 		--enable-pc-files \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf ncurses.tar.gz ncurses.tar.gz.sig ncurses-${METACALL_LIBNCURSES_VERSION}
 
@@ -139,7 +139,7 @@ curl https://ftp.gnu.org/gnu/gdbm/gdbm-${METACALL_LIBGDBM_VERSION}.tar.gz --outp
 		--disable-static \
 		--enable-libgdbm-compat \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf gdbm.tar.gz.sig gdbm.tar.gz gdbm-${METACALL_LIBGDBM_VERSION}
 
@@ -188,7 +188,7 @@ apt-get update \
 		--enable-shared \
 		--disable-cxx \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf gmp-${METACALL_LIBGMP_VERSION}
 
@@ -214,7 +214,7 @@ git clone -j8 --recursive --single-branch --branch ${METACALL_LIBYAML_VERSION} h
 	&& ./configure \
 		--prefix=${METACALL_PATH}/ruby \
 	&& make -j $(nproc) \
-	&& make install \
+	&& sudo make install \
 	&& cd .. \
 	&& rm -rf libyaml
 
@@ -239,8 +239,8 @@ export METACALL_LIBTCL_VERSION_BRANCH=$(printf '%s' "${METACALL_LIBTCL_VERSION}"
 		-e "/TCL_B/s@='\(-L\)\?.*unix@='\1${METACALL_PATH}/ruby/lib@" \
 		-e "/SEARCH/s/=.*/=''/" \
 		tclConfig.sh \
-	&& make install \
-	&& make install-private-headers \
+	&& sudo make install \
+	&& sudo make install-private-headers \
 	&& ln -rs ${METACALL_PATH}/ruby/bin/tclsh ${METACALL_PATH}/ruby/bin/$(expr substr "${METACALL_LIBTCL_VERSION}" 1 3) \
 	&& cd ../.. \
 	&& rm -rf tcl
@@ -292,7 +292,7 @@ export METACALL_RUBY_VERSION_BRANCH=$(printf '%s' "${METACALL_RUBY_VERSION}" | t
 	&& make -j$(nproc) \
 	&& make update-gems \
 	&& make extract-gems \
-	&& make install
+	&& sudo make install
 
 # FROM scratch AS ruby
 
