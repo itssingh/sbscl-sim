@@ -1,6 +1,6 @@
 #! /bin/bash
 
-
+METACALL_PATH="metacall"
 
 mkdir -p "${METACALL_PATH}"
 

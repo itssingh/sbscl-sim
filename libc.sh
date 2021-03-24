@@ -2,6 +2,7 @@
 
 
 export METACALL_GLIBC_VERSION="2.30"
+METACALL_PATH="metacall"
 
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends python3 python3-pip

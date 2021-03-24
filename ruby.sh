@@ -13,7 +13,7 @@ export METACALL_LIBYAML_VERSION="0.2.2"
 export METACALL_LIBTCL_VERSION="8.6.9"
 export METACALL_LIBTK_VERSION="8.6.9.1"
 export METACALL_RUBY_VERSION="2.5.5"
-
+METACALL_PATH="metacall"
 
 
 # ARG METACALL_ARCH
@@ -234,7 +234,7 @@ export METACALL_LIBTCL_VERSION_BRANCH=$(printf '%s' "${METACALL_LIBTCL_VERSION}"
 		--enable-shared \
 		--enable-threads \
 	&& make -j$(nproc) \
-	&& sed -i \
+	&& sudo sed -i \
 		-e "s@^\(TCL_SRC_DIR='\).*@\1"${METACALL_PATH}"/ruby/include'@" \
 		-e "/TCL_B/s@='\(-L\)\?.*unix@='\1"${METACALL_PATH}"/ruby/lib@" \
 		-e "/SEARCH/s/=.*/=''/" \
@@ -243,7 +243,7 @@ export METACALL_LIBTCL_VERSION_BRANCH=$(printf '%s' "${METACALL_LIBTCL_VERSION}"
 	&& sudo make install-private-headers \
 	&& sudo ln -rs "${METACALL_PATH}"/ruby/bin/tclsh "${METACALL_PATH}"/ruby/bin/$(expr substr "${METACALL_LIBTCL_VERSION}" 1 3) \
 	&& cd ../.. \
-	&& rm -rf tcl
+	&& sudo rm -rf tcl
 
 # # Install libtk
 # FROM builder AS builder_libtk

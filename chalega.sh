@@ -1,5 +1,5 @@
 #! /bin/bash
-
+METACALL_PATH="metacall"
 CFLAGS=""
 LDFLAGS=" \
 	-fPIC \
