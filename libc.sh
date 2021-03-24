@@ -10,8 +10,8 @@ sudo pip3 install pexpect
 
 export LC_ALL=POSIX
 export PATH="${METACALL_PATH}/bin:/bin:/usr/bin:/sbin:/usr/sbin"
-
-mkdir -p "${METACALL_PATH}/libc"
+METACALL_PATH="${HOME}/metacall"
+sudo mkdir -p "${METACALL_PATH}/libc"
 pwd
 echo "$HOME"
 tree ${METACALL_PATH}
