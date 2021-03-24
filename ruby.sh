@@ -13,7 +13,7 @@ export METACALL_LIBYAML_VERSION="0.2.2"
 export METACALL_LIBTCL_VERSION="8.6.9"
 export METACALL_LIBTK_VERSION="8.6.9.1"
 export METACALL_RUBY_VERSION="2.5.5"
-METACALL_PATH="metacall"
+METACALL_PATH="/home/runner/work/sbsc-sim/sbsc-sim/metacall"
 
 
 # ARG METACALL_ARCH

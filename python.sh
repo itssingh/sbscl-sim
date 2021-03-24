@@ -20,7 +20,7 @@ export METACALL_LIBGCC_VERSION="6.3.0"
 export METACALL_LIBMPDEC_VERSION="2.4.2"
 export METACALL_LIBEXPAT_VERSION="2.2.9"
 export METACALL_PYTHON_VERSION="3.6.7"
-METACALL_PATH="metacall"
+METACALL_PATH="/home/runner/work/sbsc-sim/sbsc-sim/metacall"
 
 CFLAGS=" -I"${METACALL_PATH}"/python/include"
 

@@ -1,5 +1,5 @@
 #! /bin/bash
-METACALL_PATH="metacall"
+METACALL_PATH="/home/runner/work/sbsc-sim/sbsc-sim/metacall"
 CFLAGS=""
 LDFLAGS=" \
 	-fPIC \

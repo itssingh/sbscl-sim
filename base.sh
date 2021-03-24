@@ -1,6 +1,6 @@
 #! /bin/bash
 
-METACALL_PATH="metacall"
+METACALL_PATH="/home/runner/work/sbsc-sim/sbsc-sim/metacall"
 
 mkdir -p "${METACALL_PATH}"
 
