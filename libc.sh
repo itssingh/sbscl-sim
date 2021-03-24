@@ -10,8 +10,8 @@ sudo pip3 install pexpect
 
 export LC_ALL=POSIX
 export PATH="${METACALL_PATH}/bin:/bin:/usr/bin:/sbin:/usr/sbin"
-METACALL_PATH="${HOME}/metacall"
-sudo mkdir -p "${METACALL_PATH}/libc"
+METACALL_PATH="${HOME}/work/sbsc-sim/metacall"
+mkdir -p "${METACALL_PATH}/libc"
 echo "Hello I am here" >> "${METACALL_PATH}/libc/test.txt"
 
 pwd
@@ -25,14 +25,15 @@ tar -xjf glibc.tar.bz2
 mkdir -p "glibc-${METACALL_GLIBC_VERSION}/build"
 cd "glibc-${METACALL_GLIBC_VERSION}/build"
 pwd
-sudo ../configure
+../configure
 		--prefix="${METACALL_PATH}/libc" \
 		--host=${METACALL_ARCH_HOST} \
 		--build=$(../scripts/config.guess) \
 		--enable-kernel=3.2 \
 		libc_cv_forced_unwind=yes \
 		libc_cv_c_cleanup=yes \
-sudo make -j $(nproc)
+make clean
+make -j $(nproc)
 
 sudo make install
 cd ../..
