@@ -24,7 +24,6 @@ jobs:
           sudo apt install tree
           export METACALL_ARCH="amd64"
           export METACALL_ARCH_HOST="x86_64-linux-gnu"
-          export METACALL_PATH="metacall"
           export LANG=en_US.utf8
           export DEBIAN_FRONTEND=noninteractive
           export nproc="8"

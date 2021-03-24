@@ -2,7 +2,6 @@
 
 
 export METACALL_GLIBC_VERSION="2.30"
-METACALL_PATH="/home/runner/work/sbsc-sim/sbsc-sim/metacall"
 
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends python3 python3-pip
@@ -15,7 +14,7 @@ export PATH="${METACALL_PATH}/bin:/bin:/usr/bin:/sbin:/usr/sbin"
 mkdir -p "${HOME}/${METACALL_PATH}/libc"
 pwd
 echo "$HOME"
-
+tree $HOME -I '.git'
 ls -a
 curl https://ftp.gnu.org/gnu/glibc/glibc-${METACALL_GLIBC_VERSION}.tar.bz2 --output glibc.tar.bz2
 curl https://ftp.gnu.org/gnu/glibc/glibc-${METACALL_GLIBC_VERSION}.tar.bz2.sig --output glibc.tar.bz2.sig
@@ -24,7 +23,6 @@ tar -xjf glibc.tar.bz2
 mkdir -p "glibc-${METACALL_GLIBC_VERSION}/build"
 cd "glibc-${METACALL_GLIBC_VERSION}/build"
 pwd
-tree -a -I '.git'
 ../configure
 		--prefix="${HOME}/${METACALL_PATH}/libc" \
 		--host=${METACALL_ARCH_HOST} \
