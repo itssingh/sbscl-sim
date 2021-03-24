@@ -10,8 +10,10 @@ on:
   pull_request:
     branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+env:
+  METACALL_ARCH: amd64
+  METACALL_ARCH_HOST: x86_64-linux-gnu
+  METACALL_PATH: $METACALL_PATH
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -19,18 +21,31 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    container: docker:19.03.12
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: install
+        run: sudo apt install tree
+      - name: Run base
         run: |
-          docker build https://github.com/metacall/distributable.git#master
-          docker run --privileged --name tmp metacall/distributable sh -c 'guix pull'
-          docker commit tmp metacall/distributable && docker rm -f tmp
-          docker run -d --privileged --name tmp metacall/distributable /metacall/scripts/deps.sh
-          docker commit tmp metacall/distributable && docker rm -f tmp
-          docker run --rm -v $PWD/out:/metacall/pack --privileged metacall/distributable /metacall/scripts/build.sh
+          bash base.sh
+          tree .
 
+
+      - name: Run libc
+        run: |
+          bash libc.sh
+          tree .
+
+      - name: Run Python
+        run: |
+          bash python.sh
+
+      - name: Run core
+        run: | 
+          chalega.sh
+          tree .
+
+          
+
+          
