@@ -1,19 +1,19 @@
 #! /bin/bash
 
-METACALL_ARCH="amd64"
-METACALL_ZLIB_VERSION="1.2.11"
-METACALL_LIBFFI_VERSION="3.2.1"
-METACALL_LIBSSL_VERSION="OpenSSL_1_1_1c"
-METACALL_LIBNCURSES_VERSION="6.1"
-METACALL_LIBGDBM_VERSION="1.18"
-METACALL_LIBREADLINE_VERSION="8.0"
-METACALL_LIBGMP_VERSION="6.1.2"
-METACALL_LIBTINFO_VERSION="6.0"
-METACALL_LIBYAML_VERSION="0.2.2"
-METACALL_LIBTCL_VERSION="8.6.9"
-METACALL_LIBTK_VERSION="8.6.9.1"
-METACALL_RUBY_VERSION="2.5.5"
-METACALL_PATH=$METACALL_PATH
+export METACALL_ARCH="amd64"
+export METACALL_ZLIB_VERSION="1.2.11"
+export METACALL_LIBFFI_VERSION="3.2.1"
+export METACALL_LIBSSL_VERSION="OpenSSL_1_1_1c"
+export METACALL_LIBNCURSES_VERSION="6.1"
+export METACALL_LIBGDBM_VERSION="1.18"
+export METACALL_LIBREADLINE_VERSION="8.0"
+export METACALL_LIBGMP_VERSION="6.1.2"
+export METACALL_LIBTINFO_VERSION="6.0"
+export METACALL_LIBYAML_VERSION="0.2.2"
+export METACALL_LIBTCL_VERSION="8.6.9"
+export METACALL_LIBTK_VERSION="8.6.9.1"
+export METACALL_RUBY_VERSION="2.5.5"
+
 
 
 # ARG METACALL_ARCH
@@ -25,23 +25,23 @@ METACALL_PATH=$METACALL_PATH
 # ARG METACALL_PATH
 
 # # Copy libc
-# COPY --from=libc ${METACALL_PATH}/libc ${METACALL_PATH}/libc
+# COPY --from=libc "${METACALL_PATH}"/libc "${METACALL_PATH}"/libc
 
 # Set c flags
 CFLAGS=" \
-	-I${METACALL_PATH}/ruby/include"
+	-I"${METACALL_PATH}"/ruby/include"
 
 # Set linker flags
 LDFLAGS=" \
 	-fPIC \
-	-L${METACALL_PATH}/libc/lib \
-	-L${METACALL_PATH}/ruby/lib \
-	-Wl,-rpath=${METACALL_PATH}/libc/lib \
-	-Wl,-rpath=${METACALL_PATH}/ruby/lib \
-	-Wl,--dynamic-linker=${METACALL_PATH}/libc/lib/ld.so"
+	-L"${METACALL_PATH}"/libc/lib \
+	-L"${METACALL_PATH}"/ruby/lib \
+	-Wl,-rpath="${METACALL_PATH}"/libc/lib \
+	-Wl,-rpath="${METACALL_PATH}"/ruby/lib \
+	-Wl,--dynamic-linker="${METACALL_PATH}"/libc/lib/ld.so"
 
 # Create output path
-mkdir -p ${METACALL_PATH}/ruby
+mkdir -p "${METACALL_PATH}"/ruby
 
 # Install zlib
 # FROM builder AS builder_zlib
@@ -51,7 +51,7 @@ mkdir -p ${METACALL_PATH}/ruby
 git clone -j8 --single-branch --branch v${METACALL_ZLIB_VERSION} https://github.com/madler/zlib.git zlib \
 	&& cd zlib \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/ruby \
+		--prefix="${METACALL_PATH}"/ruby \
 	&& make -j $(nproc) \
 	&& sudo make install \
 	&& cd .. \
@@ -68,7 +68,7 @@ git clone -j8 --single-branch --branch v${METACALL_LIBFFI_VERSION} https://githu
 	&& sed -e '/^includesdir/ s/$(libdir).*$/$(includedir)/' -i include/Makefile.in \
 	&& sed -e '/^includedir/ s/=.*$/=@includedir@/' -e 's/^Cflags: -I${includedir}/Cflags:/' -i libffi.pc.in \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/ruby \
+		--prefix="${METACALL_PATH}"/ruby \
 		--disable-static \
 		--disable-docs \
 	&& make -j $(nproc) \
@@ -79,17 +79,17 @@ git clone -j8 --single-branch --branch v${METACALL_LIBFFI_VERSION} https://githu
 # # Install libssl
 # FROM builder AS builder_libssl
 
-# COPY --from=builder_zlib ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
+# COPY --from=builder_zlib "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
 
 # ARG METACALL_LIBSSL_VERSION
 
 git clone -j8 --recursive --single-branch --branch ${METACALL_LIBSSL_VERSION} https://github.com/openssl/openssl.git libssl \
 	&& cd libssl \
 	&& ./config \
-		--prefix=${METACALL_PATH}/ruby \
-		--openssldir=${METACALL_PATH}/ruby \
-		--with-zlib-include=${METACALL_PATH}/ruby/include \
-		--with-zlib-lib=${METACALL_PATH}/ruby/lib \
+		--prefix="${METACALL_PATH}"/ruby \
+		--openssldir="${METACALL_PATH}"/ruby \
+		--with-zlib-include="${METACALL_PATH}"/ruby/include \
+		--with-zlib-lib="${METACALL_PATH}"/ruby/lib \
 		shared \
 		no-tests \
 		zlib \
@@ -111,7 +111,7 @@ curl https://ftp.gnu.org/gnu/ncurses/ncurses-${METACALL_LIBNCURSES_VERSION}.tar.
 	&& cd ncurses-${METACALL_LIBNCURSES_VERSION} \
 	&& sed -i '/LIBTOOL_INSTALL/d' c++/Makefile.in \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/ruby \
+		--prefix="${METACALL_PATH}"/ruby \
 		--with-shared \
 		--without-debug \
 		--without-normal \
@@ -135,7 +135,7 @@ curl https://ftp.gnu.org/gnu/gdbm/gdbm-${METACALL_LIBGDBM_VERSION}.tar.gz --outp
 	&& tar -xzf gdbm.tar.gz \
 	&& cd gdbm-${METACALL_LIBGDBM_VERSION} \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/ruby \
+		--prefix="${METACALL_PATH}"/ruby \
 		--disable-static \
 		--enable-libgdbm-compat \
 	&& make -j $(nproc) \
@@ -146,7 +146,7 @@ curl https://ftp.gnu.org/gnu/gdbm/gdbm-${METACALL_LIBGDBM_VERSION}.tar.gz --outp
 # Install libreadline
 # FROM builder AS builder_libreadline
 
-# COPY --from=builder_libncurses ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
+# COPY --from=builder_libncurses "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
 
 # ARG METACALL_LIBREADLINE_VERSION
 
@@ -158,13 +158,13 @@ curl https://ftp.gnu.org/gnu/readline/readline-${METACALL_LIBREADLINE_VERSION}.t
 	&& sed -i '/MV.*old/d' Makefile.in \
 	&& sed -i '/{OLDSUFF}/c:' support/shlib-install \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/ruby \
+		--prefix="${METACALL_PATH}"/ruby \
 		--disable-static \
 		--enable-shared \
 		--enable-multibyte \
 		--with-curses \
-	&& make SHLIB_LIBS="-L${METACALL_PATH}/ruby/lib -lncursesw" -j $(nproc) \
-	&& make SHLIB_LIBS="-L${METACALL_PATH}/ruby/lib -lncursesw" install \
+	&& make SHLIB_LIBS="-L"${METACALL_PATH}"/ruby/lib -lncursesw" -j $(nproc) \
+	&& make SHLIB_LIBS="-L"${METACALL_PATH}"/ruby/lib -lncursesw" install \
 	&& cd .. \
 	&& rm -rf readline-${METACALL_LIBREADLINE_VERSION}
 
@@ -183,7 +183,7 @@ apt-get update \
 	&& cp configfsf.guess config.guess \
 	&& cp configfsf.sub config.sub \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/ruby \
+		--prefix="${METACALL_PATH}"/ruby \
 		--disable-static \
 		--enable-shared \
 		--disable-cxx \
@@ -195,13 +195,13 @@ apt-get update \
 # Install libtinfo
 # FROM builder AS builder_libtinfo
 
-# COPY --from=builder_libncurses ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
+# COPY --from=builder_libncurses "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
 
 # ARG METACALL_LIBNCURSES_VERSION
 # ARG METACALL_LIBTINFO_VERSION
 
-ln -s ${METACALL_PATH}/ruby/lib/libncursesw.so.${METACALL_LIBNCURSES_VERSION} ${METACALL_PATH}/ruby/lib/libtinfo.so.${METACALL_LIBTINFO_VERSION} \
-	&& ln -s ${METACALL_PATH}/ruby/lib/libtinfo.so.${METACALL_LIBTINFO_VERSION} ${METACALL_PATH}/ruby/lib/libtinfo.so
+sudo ln -s "${METACALL_PATH}"/ruby/lib/libncursesw.so.${METACALL_LIBNCURSES_VERSION} "${METACALL_PATH}"/ruby/lib/libtinfo.so.${METACALL_LIBTINFO_VERSION} \
+sudo ln -s "${METACALL_PATH}"/ruby/lib/libtinfo.so.${METACALL_LIBTINFO_VERSION} "${METACALL_PATH}"/ruby/lib/libtinfo.so
 
 # # Install libyaml
 # FROM builder AS builder_libyaml
@@ -212,7 +212,7 @@ git clone -j8 --recursive --single-branch --branch ${METACALL_LIBYAML_VERSION} h
 	&& cd libyaml \
 	&& ./bootstrap \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/ruby \
+		--prefix="${METACALL_PATH}"/ruby \
 	&& make -j $(nproc) \
 	&& sudo make install \
 	&& cd .. \
@@ -221,7 +221,7 @@ git clone -j8 --recursive --single-branch --branch ${METACALL_LIBYAML_VERSION} h
 # Install libtcl
 # FROM builder AS builder_libtcl
 
-# COPY --from=builder_zlib ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
+# COPY --from=builder_zlib "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
 
 # ARG METACALL_LIBTCL_VERSION
 
@@ -229,26 +229,26 @@ export METACALL_LIBTCL_VERSION_BRANCH=$(printf '%s' "${METACALL_LIBTCL_VERSION}"
 	&& git clone -j8 --single-branch --branch core-${METACALL_LIBTCL_VERSION_BRANCH} https://github.com/tcltk/tcl.git tcl \
 	&& cd tcl/unix \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/ruby \
-		--exec-prefix=${METACALL_PATH}/ruby \
+		--prefix="${METACALL_PATH}"/ruby \
+		--exec-prefix="${METACALL_PATH}"/ruby \
 		--enable-shared \
 		--enable-threads \
-	&& make -j $(nproc) \
+	&& make -j$(nproc) \
 	&& sed -i \
-		-e "s@^\(TCL_SRC_DIR='\).*@\1${METACALL_PATH}/ruby/include'@" \
-		-e "/TCL_B/s@='\(-L\)\?.*unix@='\1${METACALL_PATH}/ruby/lib@" \
+		-e "s@^\(TCL_SRC_DIR='\).*@\1"${METACALL_PATH}"/ruby/include'@" \
+		-e "/TCL_B/s@='\(-L\)\?.*unix@='\1"${METACALL_PATH}"/ruby/lib@" \
 		-e "/SEARCH/s/=.*/=''/" \
 		tclConfig.sh \
 	&& sudo make install \
 	&& sudo make install-private-headers \
-	&& ln -rs ${METACALL_PATH}/ruby/bin/tclsh ${METACALL_PATH}/ruby/bin/$(expr substr "${METACALL_LIBTCL_VERSION}" 1 3) \
+	&& sudo ln -rs "${METACALL_PATH}"/ruby/bin/tclsh "${METACALL_PATH}"/ruby/bin/$(expr substr "${METACALL_LIBTCL_VERSION}" 1 3) \
 	&& cd ../.. \
 	&& rm -rf tcl
 
 # # Install libtk
 # FROM builder AS builder_libtk
 
-# COPY --from=builder_libtcl ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
+# COPY --from=builder_libtcl "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
 
 # ARG METACALL_LIBTK_VERSION
 
@@ -257,16 +257,16 @@ export METACALL_LIBTCL_VERSION_BRANCH=$(printf '%s' "${METACALL_LIBTCL_VERSION}"
 # FROM builder AS builder_ruby
 
 # # Copy all dependencies
-# COPY --from=builder_zlib ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
-# COPY --from=builder_libffi ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
-# COPY --from=builder_libssl ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
-# COPY --from=builder_libncurses ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
-# COPY --from=builder_libgdbm ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
-# COPY --from=builder_libreadline ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
-# COPY --from=builder_libgmp ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
-# COPY --from=builder_libtinfo ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
-# COPY --from=builder_libyaml ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
-# COPY --from=builder_libtk ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
+# COPY --from=builder_zlib "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
+# COPY --from=builder_libffi "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
+# COPY --from=builder_libssl "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
+# COPY --from=builder_libncurses "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
+# COPY --from=builder_libgdbm "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
+# COPY --from=builder_libreadline "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
+# COPY --from=builder_libgmp "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
+# COPY --from=builder_libtinfo "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
+# COPY --from=builder_libyaml "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
+# COPY --from=builder_libtk "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
 
 # # Build Ruby
 # ARG METACALL_RUBY_VERSION
@@ -280,11 +280,11 @@ export METACALL_RUBY_VERSION_BRANCH=$(printf '%s' "${METACALL_RUBY_VERSION}" | t
 	&& cd ruby \
 	&& autoconf \
 	&& ./configure \
-		--prefix=${METACALL_PATH}/ruby \
+		--prefix="${METACALL_PATH}"/ruby \
 		--enable-shared \
 		--disable-install-doc \
-		--with-readline-dir=${METACALL_PATH}/ruby \
-		--with-openssl-dir=${METACALL_PATH}/ruby \
+		--with-readline-dir="${METACALL_PATH}"/ruby \
+		--with-openssl-dir="${METACALL_PATH}"/ruby \
 		--without-x11 \
 		--with-out-ext=win32,win32ole,tk,tk/* \
 		CFLAGS="${CFLAGS} -D_FORTIFY_SOURCE=2 -O3 -fstack-protector-strong -Wformat -Werror=format-security" \
@@ -306,4 +306,4 @@ export METACALL_RUBY_VERSION_BRANCH=$(printf '%s' "${METACALL_RUBY_VERSION}" | t
 
 # ARG METACALL_PATH
 
-# COPY --from=builder_ruby ${METACALL_PATH}/ruby ${METACALL_PATH}/ruby
+# COPY --from=builder_ruby "${METACALL_PATH}"/ruby "${METACALL_PATH}"/ruby
