@@ -11,10 +11,10 @@ sudo pip3 install pexpect
 export LC_ALL=POSIX
 export PATH="${METACALL_PATH}/bin:/bin:/usr/bin:/sbin:/usr/sbin"
 
-mkdir -p "${HOME}/${METACALL_PATH}/libc"
+mkdir -p "${METACALL_PATH}/libc"
 pwd
 echo "$HOME"
-tree $HOME -I '.git'
+tree ${METACALL_PATH}
 ls -a
 curl https://ftp.gnu.org/gnu/glibc/glibc-${METACALL_GLIBC_VERSION}.tar.bz2 --output glibc.tar.bz2
 curl https://ftp.gnu.org/gnu/glibc/glibc-${METACALL_GLIBC_VERSION}.tar.bz2.sig --output glibc.tar.bz2.sig
@@ -24,7 +24,7 @@ mkdir -p "glibc-${METACALL_GLIBC_VERSION}/build"
 cd "glibc-${METACALL_GLIBC_VERSION}/build"
 pwd
 ../configure
-		--prefix="${HOME}/${METACALL_PATH}/libc" \
+		--prefix="${METACALL_PATH}/libc" \
 		--host=${METACALL_ARCH_HOST} \
 		--build=$(../scripts/config.guess) \
 		--enable-kernel=3.2 \

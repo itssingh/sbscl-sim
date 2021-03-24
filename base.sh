@@ -1,8 +1,8 @@
 #! /bin/bash
 
-METACALL_PATH="metacall"
+export METACALL_PATH="${HOME}/metacall"
 
-mkdir -p "${HOME}/${METACALL_PATH}"
+mkdir -p "${METACALL_PATH}"
 
 sudo apt-get update 
 sudo apt-get install -y --no-install-recommends \
