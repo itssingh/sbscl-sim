@@ -12,7 +12,7 @@ sudo pip3 install pexpect
 export LC_ALL=POSIX
 export PATH="${METACALL_PATH}/bin:/bin:/usr/bin:/sbin:/usr/sbin"
 
-mkdir -p "${METACALL_PATH}/libc"
+mkdir -p "${HOME}/${METACALL_PATH}/libc"
 pwd
 echo "$HOME"
 
@@ -24,8 +24,9 @@ tar -xjf glibc.tar.bz2
 mkdir -p "glibc-${METACALL_GLIBC_VERSION}/build"
 cd "glibc-${METACALL_GLIBC_VERSION}/build"
 pwd
+tree -a -I '.git'
 ../configure
-		--prefix=../metacall/libc \
+		--prefix="${HOME}/${METACALL_PATH}/libc" \
 		--host=${METACALL_ARCH_HOST} \
 		--build=$(../scripts/config.guess) \
 		--enable-kernel=3.2 \

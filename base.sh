@@ -2,7 +2,7 @@
 
 METACALL_PATH="/home/runner/work/sbsc-sim/sbsc-sim/metacall"
 
-mkdir -p "${METACALL_PATH}"
+mkdir -p "${HOME}/${METACALL_PATH}"
 
 sudo apt-get update 
 sudo apt-get install -y --no-install-recommends \
